@@ -78,11 +78,20 @@ class IntegrationTests extends AnyFunSpec with BeforeAndAfterAll {
             val actual =
               compileFile(scenario.resolve("input.scala")).trim
 
+            val tmpActual = Files.createTempFile("actual", ".txt")
+            Files.write(tmpActual, actual.getBytes(StandardCharsets.UTF_8))
+
             if (actual != expected) {
               println("Compiler output:")
               println("=====")
               println(actual)
               println("=====")
+              println("Expected output:")
+              println("=====")
+              println(expected)
+              println("=====")
+              println(s"To view the diff, run:\nicdiff $expectedFile $tmpActual")
+              println(s"To accept the new output, run:\ncp $tmpActual $expectedFile")
             }
             assert(actual === expected)
           }
